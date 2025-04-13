@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,12 +25,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.nxxr.spaces.R
-import com.nxxr.spaces.ui.navigation.Screen
 
 
 @Composable
-fun SplashScreen(modifier: Modifier, onNavigateToLogin: () -> Unit) {
+fun SplashScreen(
+    navController: NavHostController,
+    modifier: Modifier
+) {
 
         Box(
             modifier = modifier
@@ -66,27 +71,19 @@ fun SplashScreen(modifier: Modifier, onNavigateToLogin: () -> Unit) {
                 )
             }
 
-            Button(
-                onClick = { onNavigateToLogin() },
+            OutlinedButton(
+                onClick = { navController.navigate("login") },
                 modifier = Modifier.padding(top = 32.dp)
                     .padding(20.dp)
                     .align(Alignment.BottomEnd)
             ) {
-                Text(text = "Get Started")
+                Text(text = "Get Started", color = Color.White, fontSize = 12.sp)
                 Icon(
                     imageVector = Icons.Default.ArrowForward,
-                    contentDescription = "Favorite",
+                    contentDescription = "Forward",
+                    tint = Color.White,
                     modifier = Modifier.size(20.dp)
                 )
             }
         }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun SplashScreenPreview(
-    modifier: Modifier = Modifier
-){
-    SplashScreen(modifier) {}
 }

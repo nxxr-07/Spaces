@@ -1,16 +1,17 @@
 package com.nxxr.spaces.ui.screens.auth
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -18,14 +19,31 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.nxxr.spaces.R
 import com.nxxr.spaces.ui.theme.*
 
 @Composable
-fun SignupScreen(onNavigateToLogin: () -> Unit = {}) {
+fun SignupScreen(
+    navController: NavController? = null,
+    authViewModel: AuthViewModel,
+    modifier: Modifier = Modifier
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+
+
+    val context = LocalContext.current
+    val authState by authViewModel.authState.observeAsState()
+
+    LaunchedEffect(authState) {
+        when(authState){
+            is AuthState.Autheticated -> { navController?.navigate("home") }
+            is AuthState.Error -> Toast.makeText(context, (authState as AuthState.Error).message, Toast.LENGTH_SHORT).show()
+            else -> Unit
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -114,7 +132,9 @@ fun SignupScreen(onNavigateToLogin: () -> Unit = {}) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { /* handle signup */ },
+                onClick = {
+                    authViewModel.signUp(email, password, confirmPassword)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
@@ -127,25 +147,17 @@ fun SignupScreen(onNavigateToLogin: () -> Unit = {}) {
             Spacer(modifier = Modifier.height(20.dp))
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Divider(
-                    modifier = Modifier.weight(1f),
-                    color = BorderDark
-                )
-                Text(
-                    text = "  or  ",
-                    color = HintText,
-                    fontSize = 14.sp
-                )
-                Divider(
-                    modifier = Modifier.weight(1f),
-                    color = BorderDark
-                )
+                Divider(modifier = Modifier.weight(1f), color = BorderDark)
+                Text(text = "  or  ", color = HintText, fontSize = 14.sp)
+                Divider(modifier = Modifier.weight(1f), color = BorderDark)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedButton(
-                onClick = { /* handle Google signup */ },
+                onClick = {
+                    // Google sign-in handled separately
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
@@ -162,19 +174,17 @@ fun SignupScreen(onNavigateToLogin: () -> Unit = {}) {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            TextButton(onClick = onNavigateToLogin) {
+            TextButton(onClick = {
+                navController?.navigate("login")
+            }) {
                 Text(
                     text = "Already have an account? Login",
                     color = HintText,
                     textAlign = TextAlign.Center
                 )
             }
+
         }
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-fun SignUpScreenPreview() {
-    SignupScreen()
-}

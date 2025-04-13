@@ -1,25 +1,48 @@
 package com.nxxr.spaces.ui.screens.auth
 
+import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.nxxr.spaces.R
 import com.nxxr.spaces.ui.theme.*
 
 @Composable
-fun LoginScreen(onNavigateToSignup: () -> Unit = {}) {
+fun LoginScreen(
+    navController: NavController? = null,
+    authViewModel: AuthViewModel,
+    modifier: Modifier = Modifier
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val authState by authViewModel.authState.observeAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(authState) {
+        when(authState){
+            is AuthState.Autheticated -> { navController?.navigate("home") }
+            is AuthState.Error -> Toast.makeText(context, (authState as AuthState.Error).message, Toast.LENGTH_SHORT).show()
+            is AuthState.Loading -> { }
+            else -> Unit
+        }
+    }
+
 
     Box(
         modifier = Modifier
@@ -89,7 +112,9 @@ fun LoginScreen(onNavigateToSignup: () -> Unit = {}) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { /* handle login */ },
+                onClick = {
+                    authViewModel.login(email, password)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
@@ -99,21 +124,37 @@ fun LoginScreen(onNavigateToSignup: () -> Unit = {}) {
                 Text(text = "Login", fontSize = 18.sp, color = ButtonText)
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedButton(
+                onClick = {
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                shape = RoundedCornerShape(14.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Primary)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.google_icon),
+                    contentDescription = "Google icon"
+                )
+                Text("Continue with Google", fontSize = 16.sp, color = ButtonText)
+            }
+
             Spacer(modifier = Modifier.height(20.dp))
 
-            TextButton(onClick = onNavigateToSignup) {
+            TextButton(onClick = {
+                navController?.navigate("signup")
+            }) {
                 Text(
                     text = "Don't have an account? Sign up",
                     color = HintText,
                     textAlign = TextAlign.Center
                 )
             }
+
         }
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-fun DarkLoginScreenPreview() {
-    LoginScreen()
-}

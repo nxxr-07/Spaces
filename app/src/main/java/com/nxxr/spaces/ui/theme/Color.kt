@@ -2,7 +2,7 @@ package com.nxxr.spaces.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Primary = Color(0xFFBB86FC) // Soft purple for cozy premium feel
+val Primary = Color(0xFF001B75) // Soft purple for cozy premium feel
 val Background = Color(0xFF121212) // Deep dark background
 val Surface = Color(0xFF1E1E1E) // Surface with lighter dark
 val OnPrimary = Color(0xFFFFFFFF) // Text on primary
