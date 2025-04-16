@@ -1,11 +1,20 @@
 package com.nxxr.spaces.ui.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.nxxr.spaces.ui.screens.AboutScreen
+import com.nxxr.spaces.ui.screens.AboutUser
+import com.nxxr.spaces.ui.screens.BookingScreen
+import com.nxxr.spaces.ui.screens.CustomBottomBar
 import com.nxxr.spaces.ui.screens.HomeScreen
 import com.nxxr.spaces.ui.screens.SplashScreen
 import com.nxxr.spaces.ui.screens.auth.AuthViewModel
@@ -17,6 +26,8 @@ sealed class Screen(val route: String) {
     object Login : Screen("login")
     object Signup : Screen("signup")
     object Home : Screen("home")
+    object About: Screen("about")
+    object Booking: Screen("booking")
 }
 
 @Composable
@@ -54,6 +65,19 @@ fun AppNavGraph(modifier: Modifier, authViewModel: AuthViewModel) {
                 navController,
                 authViewModel,
                 modifier = modifier
+            )
+        }
+        composable(Screen.About.route) {
+            AboutScreen(
+                navController,
+                authViewModel
+            )
+        }
+        composable(Screen.Booking.route) {
+            BookingScreen(
+                navController,
+                authViewModel,
+                modifier
             )
         }
     }

@@ -11,11 +11,13 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -25,7 +27,7 @@ import com.nxxr.spaces.ui.theme.*
 @Composable
 fun LoginScreen(
     navController: NavController? = null,
-    authViewModel: AuthViewModel,
+    authViewModel: AuthViewModel = AuthViewModel(),
     modifier: Modifier = Modifier
 ) {
     var email by remember { mutableStateOf("") }
@@ -38,7 +40,7 @@ fun LoginScreen(
         when(authState){
             is AuthState.Autheticated -> { navController?.navigate("home") }
             is AuthState.Error -> Toast.makeText(context, (authState as AuthState.Error).message, Toast.LENGTH_SHORT).show()
-            is AuthState.Loading -> { }
+            is AuthState.Loading -> {  }
             else -> Unit
         }
     }
@@ -121,7 +123,12 @@ fun LoginScreen(
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Primary)
             ) {
-                Text(text = "Login", fontSize = 18.sp, color = ButtonText)
+
+                if ( authState == AuthState.Loading){
+                    LoadingIcon()
+                }else{
+                    Text(text = "Login", fontSize = 18.sp, color = ButtonText)
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -154,7 +161,22 @@ fun LoginScreen(
                 )
             }
 
+
         }
     }
+}
+
+@Composable
+fun LoadingIcon() {
+    CircularProgressIndicator(
+        modifier = Modifier,
+        color = Color.White
+    )
+}
+
+@Preview
+@Composable
+fun LoadingIconPreview(){
+    LoadingIcon()
 }
 

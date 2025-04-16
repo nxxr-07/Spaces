@@ -71,7 +71,7 @@ fun SplashScreen(
                 )
             }
 
-            OutlinedButton(
+            Button(
                 onClick = { navController.navigate("login") },
                 modifier = Modifier.padding(top = 32.dp)
                     .padding(20.dp)

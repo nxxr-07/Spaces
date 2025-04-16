@@ -141,7 +141,13 @@ fun SignupScreen(
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Primary)
             ) {
-                Text(text = "Sign Up", fontSize = 18.sp, color = ButtonText)
+
+                if ( authState == AuthState.Loading){
+                    LoadingIcon()
+                }else{
+                    Text(text = "Sign Up", fontSize = 18.sp, color = ButtonText)
+                }
+
             }
 
             Spacer(modifier = Modifier.height(20.dp))
