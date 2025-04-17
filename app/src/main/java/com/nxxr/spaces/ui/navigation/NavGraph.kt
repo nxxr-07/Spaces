@@ -1,21 +1,13 @@
 package com.nxxr.spaces.ui.navigation
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.nxxr.spaces.ui.screens.AboutScreen
-import com.nxxr.spaces.ui.screens.AboutUser
-import com.nxxr.spaces.ui.screens.BookingScreen
-import com.nxxr.spaces.ui.screens.CustomBottomBar
-import com.nxxr.spaces.ui.screens.HomeScreen
+import com.nxxr.spaces.ui.screens.booking.BookingScreen
+import com.nxxr.spaces.ui.screens.home.HomeScreen
 import com.nxxr.spaces.ui.screens.SplashScreen
 import com.nxxr.spaces.ui.screens.auth.AuthViewModel
 import com.nxxr.spaces.ui.screens.auth.LoginScreen

@@ -47,26 +47,13 @@ fun AboutScreen(
                 }
             }
         ) { padding ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("⚙️ About Screen")
-                    Spacer(Modifier.height(12.dp))
-                    Button(onClick = {
-                        authViewModel.signOut()
-                        navController.navigate(Screen.Login.route) {
-                            popUpTo(0)
-                        }
-                    }) {
-                        Text("Sign Out")
-                    }
-                }
+            Column {
+                AboutUser(
+                    authViewModel = authViewModel,
+                    onSignOut = { onSignOut(navController, authViewModel) }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
             }
-
         }
     }
 }
@@ -81,26 +68,28 @@ fun onSignOut(
 
 @Composable
 fun AboutUser(
+    authViewModel: AuthViewModel,
     onSignOut: () -> Unit
 ){
+    val userDetails = authViewModel.getCurrentUserDetails()
+
     Row (
         modifier = Modifier
             .fillMaxWidth()
-            .height(120.dp)
             .padding(24.dp)
     ){
         Image(
-            painter =  painterResource(id = R.drawable.user_profile),
+            painter =  painterResource(id = R.drawable.user_new),
             contentDescription = "User Profile Icon",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.width(80.dp)
+            modifier = Modifier.size(60.dp),
+            contentScale = ContentScale.Crop
         )
 
         Column (
             modifier = Modifier.fillMaxWidth()
         ){
-            Text("Arshnoor", fontSize = 28.sp,  color = Color.White)
-
+            Text(userDetails[0], fontSize = 24.sp,  color = Color.White)
+            Text(userDetails[1], fontSize = 14.sp,  color = Color.White)
             OutlinedButton(
                 onClick = { onSignOut() }
             ) {
@@ -110,3 +99,8 @@ fun AboutUser(
     }
 }
 
+@Preview
+@Composable
+fun AboutScreenPreview() {
+    AboutUser(authViewModel = AuthViewModel()){}
+}

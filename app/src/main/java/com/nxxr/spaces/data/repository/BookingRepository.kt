@@ -1,86 +1,28 @@
 package com.nxxr.spaces.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.nxxr.spaces.data.model.Seat
 import com.nxxr.spaces.data.model.Booking
 import kotlinx.coroutines.tasks.await
 
 class BookingRepository {
+    private val firestore = Firebase.firestore
+    private val seatsCollection = firestore.collection("seats")
 
-    private val db = FirebaseFirestore.getInstance()
-    private val seatsRef = db.collection("seats")
-    private val bookingsRef = db.collection("bookings")
+    fun initializeSeatsIfNotPresent() {
+        for (i in 1..38) {
+            val seatId = "seat_$i"
+            val seat = Seat(id = seatId, number = i)
 
-    // 🔸 Get all seats
-    suspend fun getAllSeats(): List<Seat> {
-        return try {
-            seatsRef.get().await().documents.mapNotNull {
-                it.toObject(Seat::class.java)?.copy(id = it.id)
+            seatsCollection.document(seatId).get().addOnSuccessListener { doc ->
+                if (!doc.exists()) {
+                    seatsCollection.document(seatId).set(seat)
+                }
             }
-        } catch (e: Exception) {
-            emptyList()
         }
     }
 
-    // 🔸 Book a seat
-    suspend fun bookSeat(seatId: String, userId: String): Boolean {
-        return try {
-            val bookingTime = System.currentTimeMillis()
-
-            // 1. Update the seat status
-            seatsRef.document(seatId).update(
-                mapOf(
-                    "isBooked" to true,
-                    "bookedBy" to userId,
-                    "bookedTime" to bookingTime
-                )
-            ).await()
-
-            // 2. Create a booking record
-            val booking = Booking(
-                bookingId = bookingsRef.document().id,
-                seatId = seatId,
-                userId = userId,
-                timestamp = bookingTime
-            )
-
-            bookingsRef.document(booking.bookingId).set(booking).await()
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    // 🔸 Cancel booking (manual or automatic)
-    suspend fun cancelBooking(seatId: String): Boolean {
-        return try {
-            seatsRef.document(seatId).update(
-                mapOf(
-                    "isBooked" to false,
-                    "bookedBy" to null,
-                    "bookedTime" to 0L
-                )
-            ).await()
-
-            val bookings = bookingsRef.whereEqualTo("seatId", seatId).get().await()
-            for (doc in bookings.documents) {
-                doc.reference.update("isCheckedIn", false).await()
-            }
-
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    // 🔸 Check-In by user
-    suspend fun checkIn(bookingId: String): Boolean {
-        return try {
-            bookingsRef.document(bookingId).update("isCheckedIn", true).await()
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
 }
 

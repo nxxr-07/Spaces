@@ -29,6 +29,7 @@ fun SignupScreen(
     authViewModel: AuthViewModel,
     modifier: Modifier = Modifier
 ) {
+    var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -74,6 +75,24 @@ fun SignupScreen(
                 color = HintText,
                 modifier = Modifier.padding(bottom = 32.dp)
             )
+
+            OutlinedTextField(
+                value = username,
+                onValueChange = { username = it },
+                label = { Text("Full Name", color = HintText) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(InputBackground, RoundedCornerShape(12.dp)),
+                shape = RoundedCornerShape(12.dp),
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Primary,
+                    unfocusedBorderColor = BorderDark,
+                    cursorColor = Primary
+                )
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
                 value = email,
@@ -133,7 +152,11 @@ fun SignupScreen(
 
             Button(
                 onClick = {
-                    authViewModel.signUp(email, password, confirmPassword)
+                    authViewModel.signUp(
+                        email = email,
+                        password = password,
+                        username = username,
+                        confirmPassword = confirmPassword)
                 },
                 modifier = Modifier
                     .fillMaxWidth()

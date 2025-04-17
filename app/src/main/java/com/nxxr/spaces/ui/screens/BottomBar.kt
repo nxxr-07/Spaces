@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
@@ -21,8 +22,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.nxxr.spaces.R
 import com.nxxr.spaces.ui.navigation.Screen
 
 @Composable
@@ -66,7 +69,9 @@ fun CustomBottomBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         items.forEach { screen ->
-            IconButton(onClick = { onTabSelected(screen) }) {
+            IconButton(
+                onClick = { onTabSelected(screen) }
+            ) {
                 Icon(
                     imageVector = when (screen) {
                         is Screen.Home -> Icons.Default.Home
@@ -75,8 +80,10 @@ fun CustomBottomBar(
                         else -> Icons.Default.Info
                     },
                     contentDescription = screen.route,
-                    tint = if (screen.route == selectedRoute) Color.Blue else Color.Gray
+                    tint = if (screen.route == selectedRoute) colorResource(id = R.color.purple_700) else Color.Gray ,
+                    modifier = Modifier.size(28.dp)
                 )
+
             }
         }
     }

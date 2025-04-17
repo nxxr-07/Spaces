@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 
 sealed class AuthState {
     object Autheticated : AuthState()
@@ -47,7 +48,11 @@ class AuthViewModel : ViewModel() {
                 }
             }
     }
-    fun signUp(email:String, password: String, confirmPassword: String){
+    fun signUp(
+        username: String,
+        email:String,
+        password: String,
+        confirmPassword: String){
 
         if(email.isBlank() || password.isBlank() || password.length < 6 || confirmPassword.isBlank() || confirmPassword != password ){
             _authState.value = AuthState.Error("Email and password cannot be empty")
@@ -58,9 +63,22 @@ class AuthViewModel : ViewModel() {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(){
                 if(it.isSuccessful){
-                    _authState.value = AuthState.Autheticated
-                }else{
-                    _authState.value = AuthState.Error(it.exception?.message ?: "Something Went Wrong")
+                    val user = auth.currentUser
+
+                    val profileUpdates = UserProfileChangeRequest.Builder()
+                        .setDisplayName(username)
+                        .build()
+
+                    user?.updateProfile(profileUpdates)
+                        ?.addOnCompleteListener { updateTask ->
+                            if (updateTask.isSuccessful) {
+                                _authState.value = AuthState.Autheticated
+                            } else {
+                                _authState.value = AuthState.Error(updateTask.exception?.message ?: "Profile update failed")
+                            }
+                        }
+                } else {
+                    _authState.value = AuthState.Error(it.exception?.message ?: "Signup failed")
                 }
             }
     }
@@ -68,6 +86,13 @@ class AuthViewModel : ViewModel() {
     fun signOut(){
         auth.signOut()
         _authState.value = AuthState.Unauthenticated
+    }
+
+    fun getCurrentUserDetails(): List<String>{
+        val name = auth.currentUser?.displayName.toString()
+        val email = auth.currentUser?.email.toString()
+
+        return listOf(name, email)
     }
 
 
