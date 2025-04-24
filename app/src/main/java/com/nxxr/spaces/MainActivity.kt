@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         FirebaseApp.initializeApp(this)
 
         setContent {
-            SpacesTheme {
+            SpacesTheme (){
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                         SpacesApp(
                         modifier = Modifier.padding(innerPadding)

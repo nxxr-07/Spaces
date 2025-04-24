@@ -16,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,11 +27,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.nxxr.spaces.R
 import kotlinx.coroutines.delay
 
 @Composable
@@ -78,38 +77,41 @@ fun PomodoroTimer(
             ) {
                 // Background circle
                 CircularProgressIndicator(
-                    progress = 1f,
+                    progress = { 1f },
                     modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f), // Background ring
                     strokeWidth = 16.dp,
-                    color = Color.DarkGray.copy(alpha = 0.3f) // Background ring
                 )
 
                 // Foreground progress
                 CircularProgressIndicator(
-                    progress = progress,
+                    progress = { progress },
                     modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.secondary,
                     strokeWidth = 16.dp,
-                    color = Color(0xFFFFC107) // Amber or any vibrant color
                 )
                 Text(
                     text = formattedTime,
                     fontSize = 36.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
 
             Spacer(modifier = Modifier.height(32.dp))
 
             // Buttons
-            Row {
+            Row (
+                modifier = Modifier.weight(1f)
+            ){
                 Button(
                     onClick = {
                         isRunning = !isRunning
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = if (isRunning) Color.Red else colorResource(id = R.color.purple_500))
+
+                    colors = ButtonDefaults.buttonColors(containerColor = if (isRunning) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary)
                 ) {
-                    Text(if (isRunning) "Pause" else "Start")
+                    Text(if (isRunning) "Pause" else "Start", color = MaterialTheme.colorScheme.onPrimary)
                 }
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -118,9 +120,10 @@ fun PomodoroTimer(
                     onClick = {
                         isRunning = false
                         timeLeft = totalTime
-                    }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
                 ) {
-                    Text("Reset")
+                    Text("Reset", color = MaterialTheme.colorScheme.onSurface)
                 }
             }
         }

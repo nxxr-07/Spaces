@@ -23,6 +23,8 @@ class AuthViewModel : ViewModel() {
         checkAuthStatus()
     }
 
+    fun currentUserId() = auth.currentUser?.uid.toString()
+
     private fun checkAuthStatus() {
         if (auth.currentUser != null) {
             _authState.value = AuthState.Autheticated
@@ -48,6 +50,7 @@ class AuthViewModel : ViewModel() {
                 }
             }
     }
+
     fun signUp(
         username: String,
         email:String,
@@ -91,8 +94,9 @@ class AuthViewModel : ViewModel() {
     fun getCurrentUserDetails(): List<String>{
         val name = auth.currentUser?.displayName.toString()
         val email = auth.currentUser?.email.toString()
+        val id = auth.currentUser?.uid.toString()
 
-        return listOf(name, email)
+        return listOf(name, email, id)
     }
 
 

@@ -2,21 +2,33 @@ package com.nxxr.spaces.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Primary = Color(0xFF001B75) // Soft purple for cozy premium feel
-val Background = Color(0xFF121212) // Deep dark background
-val Surface = Color(0xFF1E1E1E) // Surface with lighter dark
-val OnPrimary = Color(0xFFFFFFFF) // Text on primary
-val OnBackground = Color(0xFFE0E0E0) // Soft white text
-val OnSurface = Color(0xFFD1D1D1) // For cards and boxes
-val Error = Color(0xFFCF6679)
-val HintText = Color(0xFFBBBBBB)         // Light gray for subtle hints
-val ButtonText = Color(0xFFFFFFFF)       // Pure white for contrast on buttons
+// Primary Color
+val Primary = Color(0xFF007AFF)
+val OnPrimary = Color.White
 
+// Backgrounds & Surfaces
+val Background = Color(0xFFF8F8F8)
+val Surface = Color.White
+val CardBackground = Color(0xFFD2D2D2)
+val OnBackground = Color(0xFF1C1C1E)
+val OnSurface = Color(0xFF3C3C43)
 
-val DarkBackgroundStart = Color(0xFF121212)  // Top gradient
-val DarkBackgroundEnd = Color(0xFF1F1F1F)    // Bottom gradient
-val OnDarkBackground = Color(0xFFEEEEEE)     // Main text on dark
-val InputBackground = Color(0xFF2A2A2A)       // TextField background
-val BorderDark = Color(0xFF3A3A3A)            // OutlineTextField border
-val ErrorRed = Color(0xFFE57373)             // Optional error red
-val Accent = Color(0xFF81C784)
+// Input Fields
+val InputBackground = Color(0xFFF2F2F7)
+val BorderDark = Color(0xFFE5E5EA)
+
+// Text & Hint
+val HintText = Color(0xFF8E8E93)
+val ButtonText = Color.White
+
+// Error & Feedback
+val Error = Color(0xFFFF453A)
+
+// Accent & Highlights
+val Accent = Color(0xFFD0D3DC)
+val Tint = Color(0xFFFFC107)
+
+// Optional: Dark Mode Background Gradient
+val DarkBackgroundStart = Color(0xFFF8F8F8)
+val DarkBackgroundEnd = Color.White
+val OnDarkBackground = Color(0xFF1C1C1E)

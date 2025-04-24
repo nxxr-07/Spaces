@@ -45,7 +45,6 @@ fun LoginScreen(
         }
     }
 
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -66,7 +65,7 @@ fun LoginScreen(
                 text = "Welcome Back",
                 fontSize = 34.sp,
                 fontWeight = FontWeight.Bold,
-                color = OnDarkBackground
+                color = MaterialTheme.colorScheme.onBackground // Using theme color
             )
 
             Text(
@@ -124,11 +123,19 @@ fun LoginScreen(
                 colors = ButtonDefaults.buttonColors(containerColor = Primary)
             ) {
 
-                if ( authState == AuthState.Loading){
+                if (authState == AuthState.Loading){
                     LoadingIcon()
-                }else{
+                } else {
                     Text(text = "Login", fontSize = 18.sp, color = ButtonText)
                 }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Divider(modifier = Modifier.weight(1f), color = BorderDark)
+                Text(text = "  or  ", color = HintText, fontSize = 14.sp)
+                Divider(modifier = Modifier.weight(1f), color = BorderDark)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -140,13 +147,13 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .height(50.dp),
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Primary)
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = CardBackground)
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.google_icon),
                     contentDescription = "Google icon"
                 )
-                Text("Continue with Google", fontSize = 16.sp, color = ButtonText)
+                Text("Continue with Google", fontSize = 16.sp, color = OnSurface)
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -160,8 +167,6 @@ fun LoginScreen(
                     textAlign = TextAlign.Center
                 )
             }
-
-
         }
     }
 }
@@ -170,7 +175,7 @@ fun LoginScreen(
 fun LoadingIcon() {
     CircularProgressIndicator(
         modifier = Modifier,
-        color = Color.White
+        color = MaterialTheme.colorScheme.onPrimary
     )
 }
 
@@ -179,4 +184,3 @@ fun LoadingIcon() {
 fun LoadingIconPreview(){
     LoadingIcon()
 }
-

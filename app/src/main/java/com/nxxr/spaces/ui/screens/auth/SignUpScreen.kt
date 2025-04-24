@@ -34,7 +34,6 @@ fun SignupScreen(
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
 
-
     val context = LocalContext.current
     val authState by authViewModel.authState.observeAsState()
 
@@ -191,14 +190,14 @@ fun SignupScreen(
                     .fillMaxWidth()
                     .height(50.dp),
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = OnDarkBackground)
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = CardBackground)
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.google_icon),
                     contentDescription = "Google icon"
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "Sign up with Google", color = ButtonText)
+                Text(text = "Sign up with Google", color = OnSurface)
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -216,4 +215,3 @@ fun SignupScreen(
         }
     }
 }
-
