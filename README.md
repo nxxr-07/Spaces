@@ -29,7 +29,7 @@
 ![Login Screen](app/signup_screen.jpg)
 
 ### Profile Screen
-![Profile Screen](app/about_screen_dark.jpg)
+![Profile Screen](app/profile_screen_dark.jpg)
 
 
 
