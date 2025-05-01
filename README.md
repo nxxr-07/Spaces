@@ -20,16 +20,16 @@
 
 ## 📸 Screenshots
 ### 🏠 Home Screen
-![Home Screen](screenshots/home_screen.png)
+![Home Screen](app/home_screen.png)
 
 ### 🪑 Booking Screen
-![Booking Screen](screenshots/booking_screen.png)
+![Booking Screen](app/booking_screen.png)
 
-### 🔐 Login Screen
-![Login Screen](screenshots/login_screen.png)
+### 🔐 Signup Screen
+![Login Screen](app/signup_screen.png)
 
 ### Profile Screen
-![Profile Screen](screenshots/about_screen.png)
+![Profile Screen](app/about_screen_dark.png)
 
 
 
