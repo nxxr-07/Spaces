@@ -13,7 +13,9 @@ private val LightColorScheme = lightColorScheme(
     onBackground = OnBackground,
     surface = Surface,
     onSurface = OnSurface,
+    secondaryContainer = CardBackground,
     error = Error,
+    tertiary = Tint
 )
 
 // Dark Theme Color Scheme
@@ -24,7 +26,7 @@ private val DarkColorScheme = darkColorScheme(
     onBackground = Color(0xFFF2F2F7),
     surface = Color(0xFF1E1E1E),
     onSurface = Color(0xFFEBEBF5),
-    error = Error
+    error = Error,
 )
 
 @Composable

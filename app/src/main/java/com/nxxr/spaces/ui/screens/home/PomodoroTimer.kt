@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
@@ -62,7 +63,6 @@ fun PomodoroTimer(
 
     Box(
         modifier = modifier
-            .fillMaxSize()
             .padding(24.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -102,7 +102,7 @@ fun PomodoroTimer(
 
             // Buttons
             Row (
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
             ){
                 Button(
                     onClick = {
@@ -128,4 +128,11 @@ fun PomodoroTimer(
             }
         }
     }
+}
+
+
+@Preview
+@Composable
+fun PreviewPomodoroTimer() {
+    PomodoroTimer(modifier = Modifier.background(Color.White))
 }

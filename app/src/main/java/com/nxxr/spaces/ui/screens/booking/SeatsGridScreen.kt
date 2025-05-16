@@ -25,6 +25,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -244,7 +246,7 @@ fun SeatBookingBottomSheet(
         ) {
             Column {
                 Text(
-                    text = "Seat ${seat.number}",
+                    text = "Booking Invoice",
                     style = MaterialTheme.typography.titleLarge
                 )
                 Spacer(Modifier.height(4.dp))
@@ -258,17 +260,32 @@ fun SeatBookingBottomSheet(
 
         HorizontalDivider()
 
-        Column(modifier = Modifier.padding(20.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .clip(RoundedCornerShape(24.dp))
+                .background(MaterialTheme.colorScheme.secondaryContainer)
+                .padding(20.dp)
+            ,
+
+
+        ) {
+
+            Text(
+                text = "Seat ${seat.number}",
+                style = MaterialTheme.typography.titleLarge
+            )
+            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
             Row {
                 Icon(
                     painter = painterResource(id = R.drawable.check_in),
                     contentDescription = "Check In Time",
                     modifier = Modifier.size(28.dp)
                 )
-
+                Spacer(modifier = Modifier.width(8.dp))
                 Column {
-                    Text("Start Time", style = MaterialTheme.typography.titleMedium)
-                    Spacer(Modifier.height(8.dp))
+                    Text("Check In Time", style = MaterialTheme.typography.titleLarge)
                     TimeSelector(
                         time = startTime,
                         label = "Start Time"
@@ -287,13 +304,14 @@ fun SeatBookingBottomSheet(
 
             Row {
                 Icon(
-                    painter = painterResource(id = R.drawable.check_in),
+                    painter = painterResource(id = R.drawable.check_out),
                     contentDescription = "Check Out Time",
                     modifier = Modifier.size(28.dp)
                 )
+                Spacer(modifier = Modifier.width(8.dp))
                 Column {
 
-                    Text("End Time", style = MaterialTheme.typography.titleMedium)
+                    Text("Check Out Time", style = MaterialTheme.typography.titleLarge)
                     Spacer(Modifier.height(8.dp))
                     TimeSelector(
                         time = endTime,
@@ -315,7 +333,10 @@ fun SeatBookingBottomSheet(
                 .padding(16.dp),
             horizontalArrangement = Arrangement.End
         ) {
-            TextButton(onClick = onDismiss) {
+            TextButton(
+                onClick = onDismiss,
+                colors = ButtonDefaults.textButtonColors( contentColor = MaterialTheme.colorScheme.error)
+                ) {
                 Text("Cancel")
             }
 
@@ -327,6 +348,7 @@ fun SeatBookingBottomSheet(
                     val endMillis = endTime.atDate(today).atZone(zoneId).toInstant().toEpochMilli()
                     onConfirmBooking(startMillis, endMillis)
                 },
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary),
                 enabled = endTime.isAfter(startTime)
             ) {
                 Text("Confirm")
@@ -363,21 +385,32 @@ fun TimeSelector(
 
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "$label: ${time.format(formatter)}",
-            style = MaterialTheme.typography.bodyMedium
+            text = time.format(formatter),
+            style = MaterialTheme.typography.bodyLarge
         )
 
         IconButton(onClick = { timePickerDialog.show() }) {
             Icon(
-                imageVector = Icons.Default.DateRange,
+                painter = painterResource(id = R.drawable.schedule),
                 contentDescription = "Select Time"
             )
         }
     }
+}
+
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview
+@Composable
+fun PreviewSeatBookingBottomSheet() {
+    SeatBookingBottomSheet(
+        seat = Seat(1.toString(), 1, false),
+        onConfirmBooking = { _, _ -> },
+        onDismiss = {}
+    )
 }

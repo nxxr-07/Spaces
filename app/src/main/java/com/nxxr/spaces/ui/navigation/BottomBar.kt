@@ -51,20 +51,17 @@ fun CustomBottomBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 32.dp)
+            .padding(16.dp)
             .shadow(
                 elevation = 12.dp,
                 shape = RoundedCornerShape(50),
                 clip = false
             )
             .background(
-                color = colorScheme.surface,
-                shape = RoundedCornerShape(25)
+                color = colorScheme.surface
             )
-            .clip(RoundedCornerShape(50))
             .padding(horizontal = 12.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         items.forEach { screen ->
             val isSelected = screen.route == selectedRoute

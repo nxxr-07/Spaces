@@ -9,7 +9,7 @@ val OnPrimary = Color.White
 // Backgrounds & Surfaces
 val Background = Color(0xFFF8F8F8)
 val Surface = Color.White
-val CardBackground = Color(0xFFD2D2D2)
+val CardBackground = Color(0xFFEEEEEE)
 val OnBackground = Color(0xFF1C1C1E)
 val OnSurface = Color(0xFF3C3C43)
 

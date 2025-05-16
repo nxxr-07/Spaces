@@ -2,6 +2,7 @@ package com.nxxr.spaces.ui.screens.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,7 +16,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.HorizontalDivider
@@ -23,6 +26,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -34,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -43,7 +50,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.nxxr.spaces.R
+import com.nxxr.spaces.data.model.Booking
 import com.nxxr.spaces.ui.navigation.Screen
 import com.nxxr.spaces.ui.navigation.MainScaffold
 import com.nxxr.spaces.ui.screens.auth.AuthViewModel
@@ -63,11 +72,11 @@ fun HomeScreen(
     val currentBooking by viewModel.currentBooking.collectAsState()
     val occupiedCount by viewModel.occupiedSeatsCount.collectAsState()
 
-    var ShowReminder by remember { mutableStateOf(true) }
+    var showReminder by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         viewModel.fetchHomeData(userId)
-        println("Current User Id: ${userId}")
+        println("Current User Id: $userId")
         println("Fetched currentBooking: ${viewModel.currentBooking.value}")
     }
 
@@ -81,44 +90,55 @@ fun HomeScreen(
             }
         }
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(16.dp),
-        ) {
-            OccupancyGauge(
-                modifier = modifier,
-                occupancySeatCount = occupiedCount,
-                backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
-                filledColor = MaterialTheme.colorScheme.primary
-            )
-
-            HorizontalDivider(
-                modifier = Modifier.padding(16.dp),
-                thickness = 2.dp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-            )
-
-            Text("Focus Session", fontSize = 24.sp, color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.padding(16.dp))
-
-            PomodoroTimer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            )
-
-            currentBooking?.let {
-                if(ShowReminder){
-                    BookingReminder(it.status, it.startTime, it.endTime, onDismiss = {
-                        ShowReminder =
-                            false
-                    })
-                }
-            }
-        }
+        HomeScreenLayout(
+            modifier.padding(innerPadding), occupiedCount, currentBooking, showReminder
+        )
     }
 }
+
+@Composable
+fun HomeScreenLayout(
+    modifier: Modifier,
+    occupiedCount: Int,
+    currentBooking: Booking?,
+    showReminder: Boolean
+){
+    var showReminderLocal = showReminder
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        OccupancyGauge(
+            modifier = Modifier,
+            occupancySeatCount = occupiedCount,
+            backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+            filledColor = MaterialTheme.colorScheme.primary
+        )
+
+        HorizontalDivider(
+            modifier = Modifier.padding(16.dp),
+            thickness = 2.dp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+        )
+
+        Text("Focus Session", fontSize = 24.sp, color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.padding(16.dp))
+
+        PomodoroTimer(
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+
+        currentBooking?.let {
+            if(showReminderLocal){
+                BookingReminder(it.status, it.startTime, it.endTime, onDismiss = { showReminderLocal = false })
+            }
+        }
+
+    }
+}
+
 
 @Composable
 fun BookingReminder(
@@ -134,7 +154,6 @@ fun BookingReminder(
 
     Row(
         modifier = Modifier
-            .height(68.dp)
             .fillMaxWidth()
             .shadow(
                 elevation = 12.dp,
@@ -143,8 +162,7 @@ fun BookingReminder(
             )
             .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.surface)
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(16.dp)
     ) {
         Image(
             painter = painterResource(id = R.drawable.bell),
@@ -207,14 +225,28 @@ fun BookingReminder(
     }
 }
 
-
-@Preview
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun BookingReminderPreview() {
-    BookingReminder(
-        status = "Upcoming",
-        startTime = 500,
-        endTime = 1000,
-        {}
+fun PreviewHomeScreen(){
+    HomeScreenLayout(
+        modifier = Modifier.background(Color.White),
+        occupiedCount = 7,
+        currentBooking = Booking(
+            status = "Upcoming",
+            startTime = 500,
+            endTime = 1000
+        ),
+        showReminder = true
     )
 }
+
+//@Preview
+//@Composable
+//fun BookingReminderPreview() {
+//    BookingReminder(
+//        status = "Upcoming",
+//        startTime = 500,
+//        endTime = 1000,
+//        {}
+//    )
+//}
